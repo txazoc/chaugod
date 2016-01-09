@@ -1,0 +1,12 @@
+# Mac
+.DS_Store
+
+# IDEA
+.idea/
+*.iml
+
+# Java
+*.class
+
+# Maven
+target/
