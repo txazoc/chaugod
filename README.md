@@ -350,34 +350,82 @@
 
 ### 高性能/高并发
 
+##### 多线程带来的问题及解决方案
+
+	1) 原子性
+	2) 可见性
+	3) 一致性
+	4) 线程创建开销: 线程池
+	5) 线程上下文切换开销:  CAS(非阻塞), 减少线程
+	6) 资源限制: CPU、IO、网络连接
+
 ##### JMM(Java内存模型)
 
+	共享内存模型
 	CPU － 高速缓存 － 缓存一致性协议 － 内存
-	线程 － 工作内存 － JMM － 主内存
+	线程 － 工作内存(抽象概念) － JMM － 主内存(堆内存)
 
-#### JMM原子操作
+##### JMM变量的原子操作
 
 	lock: 锁定主内存中的变量
 	unlock: 解锁主内存中的变量
 	read: 主内存读到工作内存
-	load: 保存变量到工作内存
-	use: 变量传递给CPU
-	assign:
-	store:
-	write: 变量写入主内存
+	load: read得到的变量放入工作内存放入变量副本
+	use: 工作内存中变量副本的值传递给执行引擎
+	assign: 执行引擎赋值给工作内存中变量副本
+	store: 工作内存中变量副本的值传递给主内存
+	write: store的值写入主内存
 
-#### volatile
+	lock - unlock
+	(read - load) - use
+	assign - (store - write)
 
-##### happens-before
+##### volatile(可见性)
+
+	lock: assign -> store -> write -> 缓存行无效(缓存一致性协议)
+	缓存行填充(64字节)
+	不保证原子性
+
+##### synchronized
+
+	monitorenter、monitorexit
+
+##### CAS(Compare And Swap)
+
+	原子操作
+
+##### happens-before(JMM提供的内存可见性保证)
+
+	happens-before关系: 前一个操作的执行结果对后一个操作可见
+
+	1) 顺序一致性: 同一个线程中的每个操作都happens-before其后的任何一个操作
+    2) 锁: 对一个监视器的解锁happens-before于后续对同一个监视器的加锁
+    3) volatile: 对volatile字段的写入操作happens-before于后续的同一个字段的读操作
+    4) Thread.start(): Thread.start()的调用会happens-before于启动线程里面的动作
+    5) Thread中的所有动作都happens-before于其他线程检查到此线程结束或者Thread.join()中返回或者Thread.isAlive()==false
+    6) interrupt(): 一个线程A调用另一个线程B的interrupt()都happens-before于线程A发现B被A中断(B抛出异常或者A检测到B的isInterrupted()或者interrupted())
+    7) 一个对象构造函数的结束happens-before与该对象的finalizer的开始
+    8) 传递性: 如果A动作happens-before于B动作, 而B动作happens-before与C动作，那么A动作happens-before于C动作
 
 ##### 重排序
 
+	1) 编译器优化重排序: 编译器重排序
+	2) 指令级并行重排序: 处理器重排序
+	3) 内存系统重排序: 处理器重排序
+
 	重排序: 编译期重排序、运行期重排序
 	依赖性: 数据依赖性、控制依赖性
-	as-if-serial: 重排序不改变单程序程序的执行结果
 	顺序一致性模型: 理想化模型
+	as-if-serial: 重排序不改变单程序程序的执行结果
 
-##### 内存屏障
+##### 内存屏障(禁止处理器重排序)
+
+	1) LoadLoad Barriers: Load1; LoadLoad; Load2;
+	2) StoreStore Barriers: Store1; StoreStore; Store2;
+	3) LoadStore Barriers: Load1; LoadStore; Store2;
+	4) StoreLoad Barriers: Store1; StoreLoad; Load2;
+
+	StoreLoad
 
 ##### 并发包
 
