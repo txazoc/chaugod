@@ -400,21 +400,21 @@
 
 ##### happens-before - JMM提供的内存可见性保证
 
-	happens-before关系: 前一个操作的执行结果对后一个操作可见
+	happens-before关系: 前一个操作的执行结果对后一个操作可见, 且前一个操作的执行顺序排在第二个操作之前
 
-	1) 顺序一致性: 同一个线程中的每个操作都happens-before其后的任何一个操作
-    2) 锁: 对一个监视器的解锁happens-before于后续对同一个监视器的加锁
-    3) volatile: 对volatile字段的写入操作happens-before于后续的同一个字段的读操作
-    4) Thread.start(): Thread.start()的调用会happens-before于启动线程里面的动作
-    5) Thread中的所有动作都happens-before于其他线程检查到此线程结束或者Thread.join()中返回或者Thread.isAlive()==false
+	1) 程序顺序规则: 同一个线程中的每个操作都happens-before其后的任何一个操作
+    2) 监视器锁规则: 对一个监视器的解锁happens-before于后续对同一个监视器的加锁
+    3) volatile变量规则: 对volatile字段的写入操作happens-before于后续的同一个字段的读操作
+    4) start()规则: Thread.start()的调用会happens-before于启动线程里面的动作
+    5) join()规则: Thread中的所有动作都happens-before于其他线程检查到此线程结束或者Thread.join()中返回或者Thread.isAlive()==false
     6) interrupt(): 一个线程A调用另一个线程B的interrupt()都happens-before于线程A发现B被A中断(B抛出异常或者A检测到B的isInterrupted()或者interrupted())
-    7) 一个对象构造函数的结束happens-before与该对象的finalizer的开始
+    7) 对象规则: 一个对象构造函数的结束happens-before与该对象的finalizer的开始
     8) 传递性: 如果A动作happens-before于B动作, 而B动作happens-before与C动作，那么A动作happens-before于C动作
 
 ##### 顺序一致性 - JMM对正确同步的多线程的内存一致性保证
 
 	顺序一致性: 如果程序是正确同步的, 程序的执行将具有顺序一致性, 即程序的执行结果与程序在顺序一致性内存模型中的执行结果相同
-	顺序一致性内存模型
+	顺序一致性内存模型: 理论参考模型
 		1) 一个线程的所有操作必须按照程序的顺序来执行
 		2) 所有线程都只能看到一个单一的操作执行顺序
 
@@ -446,16 +446,39 @@
 ##### synchronized
 
 	happens-before: 锁释放 happens-before 锁获取
-	锁释放的内存语义:
-	锁获取的内存语义:
+	锁释放的内存语义: 锁释放时, JMM会把该线程对应的工作内存中的共享变量值刷新到主内存
+	锁获取的内存语义: 锁获取时, JMM会把该线程对应的工作内存置为无效, 直接从主内存读取共享变量
 
 	monitorenter、monitorexit
 
 ##### CAS(Compare And Swap)
 
-	原子操作
+	CAS内存语义的实现: lock
+		1) 对内存的读－改－写操作原子执行
+		2) 禁止该指令和之前之后的读写指令重排序
+		3) 写缓冲区的所有数据刷新到内存
 
-##### 并发包
+	CAS同时具有volatile读和volatile写的内存语义
+
+##### volatile + CAS组合实现的内存可见性 - concurrent实现的基础
+
+	1) volatile写 - volatile读
+	2) volatile写 - CAS更新
+	3) CAS更新 - volatile读
+	4) CAS更新 - CAS更新
+
+##### AQS(AbstractQueuedSynchronizer) - 依赖volatile + CAS实现
+
+##### ReentrantLock - 基于AQS实现
+
+	公平锁
+		FairSync.lock: getState(), volatile读
+		FairSync.unlock: setState(state), volatile写
+	非公平锁
+		NonfairSync.lock(): compareAndSetState():
+		NonfairSync.unlock(): setState(state), volatile写
+
+##### java.util.concurrent
 
 	并发包基础: volatile、CAS(Compare And Swap)、AQS(AbstractQueuedSynchronizer)
 	原子类
@@ -463,6 +486,13 @@
 	并发扩展: Semaphore、CyclicBarrier、CountDownLatch
 	线程池: Callable、Future、Executor
 	并发集合: ConcurrentHashMap、CopyOnWriteArrayList、CopyOnWriteArraySet、ArrayBlockingQueue、LinkedBlockingQueue
+
+##### final - 保证对象的正确初始化
+
+	写final域的重排序规则: JMM禁止把final域的写重排序到构造函数之外
+		JMM实现: 写final域之后, 构造函数return之前, 插入StoreStore
+	读final域的重排序规则: JMM禁止重排序初次读对象引用与初次读该对象的final域
+		JMM实现: 读final域前插入LoadLoad
 
 **************************************************
 
