@@ -135,6 +135,7 @@
 
 ##### javac编译
 
+	字节码: javap -c
     解语法糖
 
 ##### 语法糖
@@ -152,24 +153,38 @@
 
 ##### class文件结构
 
-    magic
-    minor_version
-    major_version
-    constant_pool_count
-    constant_pool[constant_pool_count - 1]
-    access_flags
-    this_class
-    super_class
-    interfaces_count
-    interfaces[interfaces_count]
-    fields_count
-    fields[fields_count]
-    methods_count
-    methods[methods_count]
-    attributes_count
-    attributes[attributes_count]
+    u4 magic
+    u2 minor_version
+    u2 major_version
+    u2 constant_pool_count
+    cp_info constant_pool[constant_pool_count - 1]
+    u2 access_flags
+    u2 this_class
+    u2 super_class
+    u2 interfaces_count
+    u2 interfaces[interfaces_count]
+    u2 fields_count
+    field_info fields[fields_count]
+    u2 methods_count
+    method_info methods[methods_count]
+    u2 attributes_count
+    attribute_info attributes[attributes_count]
 
-##### jvm指令集
+##### jvm指令集(java se 8)
+
+	指令格式: Opcode Operand1 Operand1 ...
+
+	1) 常量指令
+	2) 加载指令
+	3) 存储指令
+	4) 操作数栈指令
+	5) 算术指令
+	6) 类型转换指令
+	7) 比较指令
+	8) 控制指令
+	9) 对象指令
+	10) 扩展指令
+	11) 保留指令
 
 ##### jvm内存模型
 
@@ -359,11 +374,49 @@
 	5) 线程上下文切换开销:  CAS(非阻塞), 减少线程
 	6) 资源限制: CPU、IO、网络连接
 
-##### JMM(Java内存模型)
+##### JMM(Java内存模型) - 多线程间的内存可见性问题
 
-	共享内存模型
-	CPU － 高速缓存 － 缓存一致性协议 － 内存
-	线程 － 工作内存(抽象概念) － JMM － 主内存(堆内存)
+	OS: CPU － 高速缓存 － 缓存一致性协议 － 内存
+	JVM: 线程 － 工作内存(共享变量的副本) － JMM － 主内存(共享变量)
+
+##### 重排序 - 多线程间的内存可见性问题
+
+	1) 编译器优化重排序: 编译器重排序
+	2) 指令级并行重排序: 处理器重排序
+	3) 内存系统重排序: 处理器重排序
+
+	1) 数据依赖性: 两个操作访问同一变量, 其中有一个为写操作, 单线程下, 不会被重排序
+	2) 控制依赖性: 单线程下, 可以被重排序, 但不改变执行结果
+	3) as-if-serial: 重排序不改变单线程的执行结果
+
+##### 内存屏障 - 禁止特定类型的处理器重排序
+
+	1) LoadLoad Barriers: Load1; LoadLoad; Load2;
+	2) StoreStore Barriers: Store1; StoreStore; Store2;
+	3) LoadStore Barriers: Load1; LoadStore; Store2;
+	4) StoreLoad Barriers: Store1; StoreLoad; Load2;
+
+	StoreLoad
+
+##### happens-before - JMM提供的内存可见性保证
+
+	happens-before关系: 前一个操作的执行结果对后一个操作可见
+
+	1) 顺序一致性: 同一个线程中的每个操作都happens-before其后的任何一个操作
+    2) 锁: 对一个监视器的解锁happens-before于后续对同一个监视器的加锁
+    3) volatile: 对volatile字段的写入操作happens-before于后续的同一个字段的读操作
+    4) Thread.start(): Thread.start()的调用会happens-before于启动线程里面的动作
+    5) Thread中的所有动作都happens-before于其他线程检查到此线程结束或者Thread.join()中返回或者Thread.isAlive()==false
+    6) interrupt(): 一个线程A调用另一个线程B的interrupt()都happens-before于线程A发现B被A中断(B抛出异常或者A检测到B的isInterrupted()或者interrupted())
+    7) 一个对象构造函数的结束happens-before与该对象的finalizer的开始
+    8) 传递性: 如果A动作happens-before于B动作, 而B动作happens-before与C动作，那么A动作happens-before于C动作
+
+##### 顺序一致性 - JMM对正确同步的多线程的内存一致性保证
+
+	顺序一致性: 如果程序是正确同步的, 程序的执行将具有顺序一致性, 即程序的执行结果与程序在顺序一致性内存模型中的执行结果相同
+	顺序一致性内存模型
+		1) 一个线程的所有操作必须按照程序的顺序来执行
+		2) 所有线程都只能看到一个单一的操作执行顺序
 
 ##### JMM变量的原子操作
 
@@ -380,52 +433,27 @@
 	(read - load) - use
 	assign - (store - write)
 
-##### volatile(可见性)
+##### volatile - 解决内存可见性
 
-	lock: assign -> store -> write -> 缓存行无效(缓存一致性协议)
-	缓存行填充(64字节)
-	不保证原子性
+	happens-before: volatile写 happens-before volatile读
+	volatile写的内存语义: 写一个volatile变量时, JMM会把该线程对应的工作内存中的共享变量值刷新到主内存
+	volatile读的内存语义: 读一个volatile变量时, JMM会把该线程对应的工作内存置为无效, 直接从主内存读取共享变量
+	volatile禁止的重排序: 变量读写 volatile写 volatile读 变量读写
+
+	StoreStore volatile写 StoreLoad
+	volatile读 LoadLoad LoadStore
 
 ##### synchronized
+
+	happens-before: 锁释放 happens-before 锁获取
+	锁释放的内存语义:
+	锁获取的内存语义:
 
 	monitorenter、monitorexit
 
 ##### CAS(Compare And Swap)
 
 	原子操作
-
-##### happens-before(JMM提供的内存可见性保证)
-
-	happens-before关系: 前一个操作的执行结果对后一个操作可见
-
-	1) 顺序一致性: 同一个线程中的每个操作都happens-before其后的任何一个操作
-    2) 锁: 对一个监视器的解锁happens-before于后续对同一个监视器的加锁
-    3) volatile: 对volatile字段的写入操作happens-before于后续的同一个字段的读操作
-    4) Thread.start(): Thread.start()的调用会happens-before于启动线程里面的动作
-    5) Thread中的所有动作都happens-before于其他线程检查到此线程结束或者Thread.join()中返回或者Thread.isAlive()==false
-    6) interrupt(): 一个线程A调用另一个线程B的interrupt()都happens-before于线程A发现B被A中断(B抛出异常或者A检测到B的isInterrupted()或者interrupted())
-    7) 一个对象构造函数的结束happens-before与该对象的finalizer的开始
-    8) 传递性: 如果A动作happens-before于B动作, 而B动作happens-before与C动作，那么A动作happens-before于C动作
-
-##### 重排序
-
-	1) 编译器优化重排序: 编译器重排序
-	2) 指令级并行重排序: 处理器重排序
-	3) 内存系统重排序: 处理器重排序
-
-	重排序: 编译期重排序、运行期重排序
-	依赖性: 数据依赖性、控制依赖性
-	顺序一致性模型: 理想化模型
-	as-if-serial: 重排序不改变单程序程序的执行结果
-
-##### 内存屏障(禁止处理器重排序)
-
-	1) LoadLoad Barriers: Load1; LoadLoad; Load2;
-	2) StoreStore Barriers: Store1; StoreStore; Store2;
-	3) LoadStore Barriers: Load1; LoadStore; Store2;
-	4) StoreLoad Barriers: Store1; StoreLoad; Load2;
-
-	StoreLoad
 
 ##### 并发包
 
