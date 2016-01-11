@@ -4,20 +4,20 @@
 
     文件流: 磁盘
 	Socket流: 网络
-	字节/字符数组流: 内存
-	缓冲流: 缓冲区, 装饰器模式
+	字节/字符数组流: 内存(byte[], char[])
+	缓冲流: 缓冲区(byte[], char[]), 装饰器模式
 	对象流: 对象, 装饰器模式, 序列化/反序列化
 	基本数据类型流: 基本数据类型, 装饰器模式
-
-	编码: ASCII、ISO-8859-1、GB2312、GBK、UTF-8、UTF-16
+	编码: ASCII、ISO-8859-1、GB2312、GBK、UTF-8、UTF-16、Unicode
 
 ##### 序列化/反序列化
 
-	单例
-	枚举
-	通用: 跨平台、跨语言(序列化格式)
+	枚举: name
+	单例: writeReplace(), readResolve()
+	通用: 跨平台、跨语言
 	性能: 空间开销(序列化大小)、时间开销(序列化/反序列化时间)
-	序列化协议: XML、JSON、Thrift、ProtoBuf
+	序列化协议: stream、xml、json、thrift、protocolbuffer
+	序列化实现: java-built-in、fastjson、jackson、hessian、Thrift、ProtoBuf
 
 ##### NIO
 
