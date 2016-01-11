@@ -14,10 +14,12 @@
 
 	枚举: name
 	单例: writeReplace(), readResolve()
-	通用: 跨平台、跨语言
+	安全性: 网络传输
+	通用性: 跨平台、跨语言
+	可扩展性: 是否支持自动加入新的字段
 	性能: 空间开销(序列化大小)、时间开销(序列化/反序列化时间)
-	序列化协议: stream、xml、json、thrift、protocolbuffer
-	序列化实现: java-built-in、fastjson、jackson、hessian、Thrift、ProtoBuf
+	序列化协议: stream、xml、json、thrift、protobuf
+	序列化实现: java-built-in、hessian、fastjson、jackson、gson、Thrift、ProtoBuf
 
 ##### NIO
 
@@ -32,14 +34,12 @@
 	Buffer: 缓冲区
 	Selector: 选择器
 
-	Reactor模式
-
 	同步: 串行执行
     异步: 并行执行, 通知
     阻塞: 一直等待, 直到条件满足
-    非阻塞: 不会等待, 直接返回标志信息
+    非阻塞: 不会等待, 轮询
 
-    IO: 检查数据是否就绪、数据拷贝(内核拷贝到用户线程)
+    IO底层: 检查数据是否就绪、数据拷贝(内核拷贝到用户线程)
 
     阻塞IO: 用户线程一直等待直到数据就绪
     非阻塞IO: 数据未就绪, 直接返回标志信息给用户线程
@@ -52,53 +52,59 @@
 	信号驱动IO模型: 内核等待数据就绪, 数据就绪后发送信号通知用户线程
 	异步IO模型: 内核等待数据就绪, 数据就绪后, 内核拷贝数据到用户线程, 然后发送信号通知用户线程
 
-	多线程IO模式: 一个连接一个线程
+	多线程IO模式: 一个IO一个线程
 	线程池IO模式: 线程池
 	Reactor模式(多路复用IO模型): 注册事件、轮询事件、分发事件
 	Proactor模式(异步IO模型): 注册事件、轮询事件、异步IO(内核拷贝数据到用户线程)、分发事件
 
 ##### 集合
 
-    fail-fast机制
-	比较器: Comparator、Comparable
+    fail-fast机制: ConcurrentModificationException
+	比较器: Comparator、Comparable, Collections.sort()、Arrays.sort()、TreeSet、TreeMap
 	迭代器: Iterator、Enumeration
 	List: ArrayList、Vector、Stack、LinkedList
 	Set: HashSet、TreeSet
 	Map: HashMap、Hashtable、TreeMap
-	Queue: Deque
-	Deque: ArrayDeque、LinkedList
+	Queue(队列): LinkedList、PriorityQueue
+	Deque(双向队列): Queue、ArrayDeque
 	Arrays、Collections
+
+	ArrayList: Object[]
+	Vector: synchronized
+	LinkedList: 双向链表
+	HashSet: HashMap
+	TreeSet: TreeMap
+	HashMap: Node<K,V>[]
+	Hashtable: synchronized
+	TreeMap: 红黑树
+	PriorityQueue: Object[], 平衡二叉堆
+	ArrayDeque: Object[]
 
 ##### 多线程
 
     Thread、Runnable
+	Object: wait()、notify()、notifyAll()
+	Thread: sleep()、join()、interrupt()
 	ThreadLocal
-	wait()、notify()、notifyAll()
-	sleep()、join()、interrupt()
-	synchronized
-	volatile
 
 ##### 网络编程
 
-    网络协议: TCP/IP、HTTP、SSL
+    网络协议: TCP/IP、UDP、HTTP、SSL
 	URL、Socket、HttpURLConnection
-	简单的HTTP服务器: 线程池、NIO、Reactor模式、响应状态码
-	nginx、apache: 特性、搭建、配置
-	FTP、SMTP: Java实现
-	RPC原理
-	消息机制(JMS)原理
 
 ##### 反射
 
+	Java反射
     javassist: 运行时分析、编辑、创建字节码
-	应用: Spring IOC、动态代理
+	应用: IOC、AOP、RPC
 
 ##### 动态代理
 
-    InvocationHandler: 代理接口
+    JDK动态代理: 代理接口
 	CGlib: 代理接口或类
 	asm
 	javassist
+	应用: AOP、RPC
 
 ##### 设计模式
 
@@ -303,7 +309,10 @@
     Hessian
     Thirft
 
-##### 分布式事务处理
+##### 分布式事务
+
+	2PC: 两阶段提交协议
+	消息队列实现
 
 ##### 远程通讯
 
