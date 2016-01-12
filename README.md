@@ -496,7 +496,14 @@
 	线程池: Callable、Future、Executor
 	并发集合: ConcurrentHashMap、CopyOnWriteArrayList、CopyOnWriteArraySet、ArrayBlockingQueue、LinkedBlockingQueue
 
-	ArrayBlockingQueue: Object[], takeIndex, putIndex, count, lock, notEmpty, notFull
+	CopyOnWriteArrayList: volatile Object[], lock, 读不lock, 写lock
+	
+	CopyOnWriteArraySet: CopyOnWriteArrayList
+	
+	ConcurrentHashMap: Node(final hash, final K, volatile V, volatile next), volatile Node<K,V>[], get不加锁, set锁Node
+
+	ArrayBlockingQueue: final Object[], takeIndex, putIndex, count, lock, notEmpty, notFull
+	LinkedBlockingQueue: Node(E, next), final int capacity, final AtomicInteger count, Node head, Node last, takeLock, notEmpty, putLock, notFull
 
 ##### final - 保证对象的正确初始化
 
