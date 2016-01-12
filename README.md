@@ -496,6 +496,8 @@
 	线程池: Callable、Future、Executor
 	并发集合: ConcurrentHashMap、CopyOnWriteArrayList、CopyOnWriteArraySet、ArrayBlockingQueue、LinkedBlockingQueue
 
+	ArrayBlockingQueue: Object[], takeIndex, putIndex, count, lock, notEmpty, notFull
+
 ##### final - 保证对象的正确初始化
 
 	写final域的重排序规则: JMM禁止把final域的写重排序到构造函数之外
