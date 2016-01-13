@@ -327,7 +327,33 @@
 
 ##### Redis
 
-##### Memcached
+	内存/持久化
+
+	数据类型: string, list, set, zset, hash
+
+	master-slave: 主从同步
+
+##### Memcached - 分布式内存对象缓存系统
+
+	Memcached客户端: 基于客户端的分布式, 客户端互不通信, 一致性hash, 序列化/反序列化
+
+	Memcached网络通信: TCP, Memcached协议
+
+	Memcached请求处理: libevent(管理网络事件), 主线程(接受请求), 多个worker线程(读、处理、写)
+
+	Memcached内存分配: 预分配, Slab(1M), Chunk, Item(K, V, E), 增长因子, 内存冗余
+
+	Memcached get:  O(1), hashtable
+
+	Memcached set: O(1), size < 1M, 选择最合适的Slab, 新增Slab, LRU, 空间换时间
+
+	Memcached cas: 原子操作
+
+	Memcached过期处理: get时查看时间戳, 检查是否过期
+
+	Memcached限制: 每个Memcached进程最大管理2G内存, 最大过期时间30天, 最大连接数200, 最大键长250, 最大键值1M
+
+	Memcached命令: add set get cas delete stats
 
 ##### 数据缓存
 
