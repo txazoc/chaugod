@@ -504,6 +504,8 @@
 
 ##### AQS(AbstractQueuedSynchronizer) - 依赖volatile + CAS实现
 
+	volatile state
+
 ##### ReentrantLock - 基于AQS实现
 
 	公平锁
@@ -661,8 +663,6 @@
 
 ##### JDK源码
 
-##### Tomcat源码
-
 ##### Struts2源码
 
 ##### Spring源码
@@ -670,3 +670,5 @@
 ##### MyBatis源码
 
 ##### Netty源码
+
+##### Tomcat源码
