@@ -7,9 +7,9 @@
 # config
 msdns1="8.8.8.8"
 msdns2="8.8.4.4"
-user="xxx"
-passwd="xxx"
-publicip="xx.xx.xx.xx"
+user="txazo"
+passwd="txazovpn1218"
+publicip="47.88.11.52"
 color="\033[40;36m"
 
 # install ppp iptables pptpd

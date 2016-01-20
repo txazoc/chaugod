@@ -10,6 +10,8 @@
 	基本数据类型流: 基本数据类型, 装饰器模式
 	编码: ASCII、ISO-8859-1、GB2312、GBK、UTF-8、UTF-16、Unicode
 
+	FileDescriptor
+
 ##### 序列化/反序列化
 
 	枚举: name
@@ -663,12 +665,18 @@
 
 ##### JDK源码
 
-##### Struts2源码
+##### Struts2源码 (OK)
 
 ##### Spring源码
 
-##### MyBatis源码
+##### MyBatis源码 (OK)
 
 ##### Netty源码
 
 ##### Tomcat源码
+
+<http://geek.csdn.net/news/detail/52070>
+
+<http://www.hollischuang.com/archives/1036>
+
+<http://yq.aliyun.com/?spm=5176.100238.yqh3.1.k3i6W3>
