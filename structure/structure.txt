@@ -1,4 +1,11 @@
-操作系统: CPU 内存 IO
+操作系统
+    CPU
+        寄存器
+        L1 Cache
+        L2 Cache
+        L3 Cache
+    内存
+    IO
 JVM: class 类加载 内存模型 垃圾回收
 Java SE API: IO/NIO 集合 多线程 网络编程 并发编程
 JDK Tools: java javac javap jconsole jvisualvm jps
