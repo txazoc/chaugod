@@ -1,18 +1,31 @@
 操作系统
     CPU
         寄存器
-        L1 Cache
+        L1 Cache(数据/指令)
         L2 Cache
         L3 Cache
+        Cache Line(64字节 命中 未命中 LRU 缓存行填充)
     内存
-    IO
-JVM: class 类加载 内存模型 垃圾回收
-Java SE API: IO/NIO 集合 多线程 网络编程 并发编程
+    IO: 磁盘 网络
+linux: 命令 shell
+JVM
+    class
+    类加载
+    内存模型
+    垃圾回收
+Java SE API
+    IO/NIO
+    集合
+    多线程
+    网络编程
+    并发编程
 JDK Tools: java javac javap jconsole jvisualvm jps
-Java: 反射 动态代理
+Java
+    反射
+    动态代理
 设计模式: 23种
 应用服务器(中间件): tomcat
 开源框架: struts2 spring mybatis
-Java应用:
+Java应用
 分布式: RPC 缓存 消息 序列化/反序列化
 数据库: MySQL sql优化

@@ -634,7 +634,7 @@
 
 ##### CPU
 
-    CPU寄存器 > L1 > L2 > L3 > 跨槽 > 内存 > 磁盘
+    寄存器 > L1 > L2 > L3 > 内存 > 磁盘
     L1 Cache: L1 Data Cache、L2 Instruction Cache
     L2 Cache
     L3 Cache
