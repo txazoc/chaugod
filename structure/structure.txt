@@ -1,7 +1,7 @@
 操作系统: CPU 内存 IO
 JVM: class 类加载 内存模型 垃圾回收
 Java SE API: IO/NIO 集合 多线程 网络编程 并发编程
-JDK Tools: java javac javap
+JDK Tools: java javac javap jconsole jvisualvm jps
 Java: 反射 动态代理
 设计模式: 23种
 应用服务器(中间件): tomcat
