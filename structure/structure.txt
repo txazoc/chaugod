@@ -54,3 +54,23 @@ Java
 Java应用
 分布式: RPC 缓存 消息 序列化/反序列化
 数据库: MySQL sql优化
+
+Http请求
+
+    DNS - 网络协议 - 应用服务器 - Servlet容器 - Servlet - Java应用
+
+Java分层
+
+    Controller - Service - Dao
+
+Java框架
+
+    Servlet/Filter - MVC框架 - Bean容器框架 - ORM框架 - 数据库连接池 - 数据库
+
+Java执行
+
+    *.java - *.class - ClassLoader - 类初始化 - JVM指令执行
+
+Java分布式
+
+    Java应用 - 分布式(RPC/消息/缓存/存储)
