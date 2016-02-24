@@ -6,7 +6,38 @@
         L3 Cache
     内存
     IO
-JVM: class 类加载 内存模型 垃圾回收
+JVM
+    javac编译器(jdk)
+        字节码
+        指令集
+        语法糖
+    类文件格式
+        常量池
+    加载 链接 初始化
+        类加载机制
+            类加载器
+        类初始化
+    运行时数据区
+        程序计数器
+        堆
+            新生代
+            老年代
+        Java虚拟机栈
+            栈桢
+                本地变量表
+                操作数栈
+                动态链接
+                方法调用返回
+        本地方法栈
+        方法区
+        运行时常量池
+    执行引擎
+        JIT编译器
+    垃圾收集
+        垃圾标记算法
+        垃圾收集算法
+        垃圾收集器
+class 类加载 内存模型 垃圾回收
 Java SE API: IO/NIO 集合 多线程 网络编程 并发编程
 JDK Tools: java javac javap jconsole jvisualvm jps
 Java: 反射 动态代理
