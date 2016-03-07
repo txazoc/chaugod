@@ -83,3 +83,10 @@ Java分布式
 Java应用
 
     IO/NIO - 集合 - 多线程 - 网络编程 - 并发编程 - 设计模式
+
+RPC
+    网络传输协议: TCP UDP HTTP
+    网络IO: AIO BIO NIO
+    传输格式: 流 xml json
+    线程池 反射 动态代理 序列化/反序列化
+    同步/异步
